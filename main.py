@@ -1,0 +1,40 @@
+import discord
+from discord.ext import commands, tasks
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+from utils.Embeds import (GenerateEmbed, GenerateFav)
+from utils.HoyoAPI import (getCharacter, LoadDatabaseCache)
+
+perm = discord.Intents.all()
+bot = commands.Bot("$", intents=perm)
+
+# ####################################################################
+
+@bot.event
+async def on_ready():
+    refresh_cache.start()
+    print("Bot inicializado com sucesso!")
+
+@tasks.loop(minutes=60)
+async def refresh_cache():
+    LoadDatabaseCache()
+
+# ###################################################################
+# Commands
+# ###################################################################
+
+@bot.command()
+async def w(ctx: commands.context):
+    data = getCharacter()
+    await GenerateEmbed(ctx, data, data["name"], data["image"], data["game"])
+
+@bot.command()
+async def fav(ctx: commands.context):
+    await GenerateFav(ctx)
+
+
+
+TOKEN = os.getenv("TOKEN")
+bot.run(TOKEN)
