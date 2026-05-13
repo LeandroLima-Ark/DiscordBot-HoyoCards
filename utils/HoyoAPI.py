@@ -1,7 +1,7 @@
 import requests
 from utils.database import supabase
 
-def LoadDatabaseCache():
+async def LoadDatabaseCache():
 
     global GENSHIN_CACHE
     global HSR_CACHE
@@ -14,10 +14,6 @@ def LoadDatabaseCache():
 
     GENSHIN_CACHE = genshin.data
 
-    print(
-        f"{len(GENSHIN_CACHE)} personagens carregados."
-    )
-
     print("Carregando cache do HSR...")
 
     hsr = supabase.table(
@@ -26,11 +22,22 @@ def LoadDatabaseCache():
 
     HSR_CACHE = hsr.data
 
-    print(
-        f"{len(HSR_CACHE)} personagens carregados."
-    )
-
     print("Cache carregado.")
+
+async def LoadClaimedCache():
+    global ClaimedCache
+
+    data = supabase.table("player_characters").select("*").execute()
+    ClaimedCache = {
+        char["character_id"]: char
+        for char in data.data
+    }
+
+def verifyOwner(char_id):
+    return ClaimedCache.get(char_id)
+
+def insertCache(char_data):
+    ClaimedCache[char_data["character_id"]] = char_data
 
 def GenshinDatabase():
     return GENSHIN_CACHE

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from utils.Embeds import (GenerateEmbed, GenerateFav)
-from utils.HoyoAPI import (getCharacter, LoadDatabaseCache)
+from utils.HoyoAPI import (getCharacter, LoadDatabaseCache, LoadClaimedCache)
 
 perm = discord.Intents.all()
 bot = commands.Bot("$", intents=perm)
@@ -15,11 +15,12 @@ bot = commands.Bot("$", intents=perm)
 @bot.event
 async def on_ready():
     refresh_cache.start()
+    await LoadClaimedCache()
     print("Bot inicializado com sucesso!")
 
 @tasks.loop(minutes=60)
 async def refresh_cache():
-    LoadDatabaseCache()
+    await LoadDatabaseCache()
 
 # ###################################################################
 # Commands
@@ -28,7 +29,7 @@ async def refresh_cache():
 @bot.command()
 async def w(ctx: commands.context):
     data = getCharacter()
-    await GenerateEmbed(ctx, data, data["name"], data["image"], data["game"])
+    await GenerateEmbed(ctx, bot, data)
 
 @bot.command()
 async def fav(ctx: commands.context):

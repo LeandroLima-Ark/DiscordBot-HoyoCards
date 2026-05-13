@@ -1,4 +1,5 @@
 from utils.database import supabase
+from utils.HoyoAPI import insertCache
 
 def create_user(user):
     data = {
@@ -85,6 +86,9 @@ def ClaimCharacter(
         "character_id": character_id
 
     }).execute()
+
+    char = supabase.table("player_characters").select("*").eq("game", game).eq("character_id", character_id).execute()
+    insertCache(char.data[0])
 
     # ==========================================
     # sucesso
