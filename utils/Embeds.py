@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-from utils.database_functions import (user_exists, create_user, verifyOwner, ClaimCharacter, get_favorites)
+from utils.database_functions import (user_exists, create_user, ClaimCharacter, get_favorites)
+from utils.HoyoAPI import (verifyOwner)
 
 class HeartButton(discord.ui.View):
     def __init__(self, character):
@@ -54,9 +55,9 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
 
     view = HeartButton(id)
 
-    owner = await verifyOwner(game, id["id"])
+    owner = verifyOwner(id["id"])
     if owner:
-        user = await bot.fetch_user(owner)
+        user = bot.get_user(int(owner["user_id"]))
         Emb.set_footer(text=f"Capturado por {user.display_name}", icon_url=user.display_avatar.url)
     else:
         Emb.set_footer(text="não capturado")
