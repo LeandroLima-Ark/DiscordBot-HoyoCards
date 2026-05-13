@@ -49,7 +49,13 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
 
     Emb = discord.Embed()
     Emb.title = name
-    Emb.description = game
+    Emb.description = (
+        "**Rank**: \n"
+        "**Elemento**: \n"
+        "Caminho/Arma: \n"
+        "\n"
+        f"{game}"
+    )
 
     Emb.set_image(url=url)
 
