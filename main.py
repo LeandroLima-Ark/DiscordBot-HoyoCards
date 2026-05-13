@@ -28,7 +28,7 @@ async def refresh_cache():
 @bot.command()
 async def w(ctx: commands.context):
     data = getCharacter()
-    await GenerateEmbed(ctx, data, data["name"], data["image"], data["game"])
+    await GenerateEmbed(ctx, bot, data)
 
 @bot.command()
 async def fav(ctx: commands.context):

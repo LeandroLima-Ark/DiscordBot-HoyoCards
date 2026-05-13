@@ -35,6 +35,21 @@ def get_favorites(user_id):
 
     return response.data[0]["favorites"]
 
+async def verifyOwner(game, character_id):
+    response = (
+        supabase.table("player_characters")
+        .select("user_id")
+        .eq("game", str(game))
+        .eq("character_id", str(character_id))
+        .execute()
+    )
+
+    data = response.data
+    if data:
+        return data[0]["user_id"]
+    else:
+        return None
+
 def ClaimCharacter(
     user_id,
     game,
