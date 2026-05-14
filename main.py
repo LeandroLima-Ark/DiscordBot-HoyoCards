@@ -8,6 +8,7 @@ from utils.Embeds import (GenerateEmbed, GenerateFav)
 from utils.HoyoAPI import (getCharacter, LoadDatabaseCache, LoadClaimedCache)
 
 perm = discord.Intents.all()
+perm.emojis = True
 bot = commands.Bot("$", intents=perm)
 
 # ####################################################################
@@ -34,7 +35,6 @@ async def w(ctx: commands.context):
 @bot.command()
 async def fav(ctx: commands.context):
     await GenerateFav(ctx)
-
 
 
 TOKEN = os.getenv("TOKEN")

@@ -66,6 +66,10 @@ def getCharacter():
             "id": Character["id"],
             "name": Character["name"],
             "image": ImageUrl,
+            "icon": Character["icon_url"],
+            "rarity": Character["rarity"],
+            "element": Character["element"],
+            "weapon": Character["weapon"],
             "game": Game
         }
     if game == 1:
@@ -78,6 +82,10 @@ def getCharacter():
             "id":  Character["id"],
             "name": Character["name"],
             "image": ImageUrl,
+            "icon": Character["icon_url"],
+            "rarity": Character["rarity"],
+            "element": Character["element"],
+            "path": Character["path"],
             "game": Game
         }
 
