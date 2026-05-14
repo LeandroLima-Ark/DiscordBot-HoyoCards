@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from utils.database_functions import (user_exists, create_user, ClaimCharacter, get_favorites)
 from utils.HoyoAPI import (verifyOwner)
+from utils.Emojis import (Elements, Paths)
 
 class HeartButton(discord.ui.View):
     def __init__(self, character):
@@ -47,12 +48,22 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
     url  = id["image"]
     game = id["game"]
 
+    rarity = id["rarity"]
+    element = id["element"]
+    
+    Side = id["weapon"] if game == "Genshin Impact" else id["path"]
+
+    field = "Weapon" if game == "Genshin Impact" else "Path" 
+
+    Element_emoji = Elements.get(element, "") 
+    Path_emoji = Paths.get(Side, "")
+
     Emb = discord.Embed()
     Emb.title = name
     Emb.description = (
-        "**Rank**: \n"
-        "**Elemento**: \n"
-        "Caminho/Arma: \n"
+        f"**Rank**: {rarity} ⭐\n"
+        f"**Element**: {element} {Element_emoji} \n"
+        f"**{field}**: {Side} {Path_emoji} \n"
         "\n"
         f"{game}"
     )
