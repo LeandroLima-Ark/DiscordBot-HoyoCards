@@ -1,4 +1,6 @@
 
+Jade = "<:jade:1504524951602987169>"
+
 Elements = {
 # Genshin Elements
 "Pyro": "<:pyro:1504276403280019527>",

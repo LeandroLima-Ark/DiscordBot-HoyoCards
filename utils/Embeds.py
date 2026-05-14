@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from utils.database_functions import (user_exists, create_user, ClaimCharacter, get_favorites)
 from utils.HoyoAPI import (verifyOwner)
-from utils.Emojis import (Elements, Paths)
+from utils.Emojis import (Elements, Paths, Jade)
 
 class HeartButton(discord.ui.View):
     def __init__(self, character):
@@ -65,7 +65,9 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
         f"**Element**: {element} {Element_emoji} \n"
         f"**{field}**: {Side} {Path_emoji} \n"
         "\n"
-        f"{game}"
+        f"**Value**: 200 {Jade} \n"
+        "\n"
+        f"**{game}**"
     )
 
     Emb.set_image(url=url)
