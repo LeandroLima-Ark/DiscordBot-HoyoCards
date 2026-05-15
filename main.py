@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from utils.Embeds import (GenerateEmbed, GenerateFav)
+from utils.Embeds import (GenerateEmbed)
 from utils.HoyoAPI import (getCharacter, LoadDatabaseCache, LoadClaimedCache)
 
 perm = discord.Intents.all()
@@ -31,11 +31,6 @@ async def refresh_cache():
 async def w(ctx: commands.context):
     data = getCharacter()
     await GenerateEmbed(ctx, bot, data)
-
-@bot.command()
-async def fav(ctx: commands.context):
-    await GenerateFav(ctx)
-
 
 TOKEN = os.getenv("TOKEN")
 bot.run(TOKEN)

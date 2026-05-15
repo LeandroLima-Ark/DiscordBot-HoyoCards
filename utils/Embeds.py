@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.database_functions import (user_exists, create_user, ClaimCharacter, get_favorites)
+from utils.database_functions import (user_exists, create_user, ClaimCharacter)
 from utils.HoyoAPI import (verifyOwner)
 from utils.Emojis import (Elements, Paths, Jade)
 
@@ -26,7 +26,7 @@ class HeartButton(discord.ui.View):
 
         character = self.character
 
-        result = ClaimCharacter(usuario.id, character["game"], character["id"])
+        result = ClaimCharacter(usuario.id, character["game"], character["id"], interaction.guild.id)
 
         if result["success"]:
             for item in self.children:
@@ -74,7 +74,7 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
 
     view = HeartButton(id)
 
-    owner = verifyOwner(id["id"])
+    owner = verifyOwner(ctx.guild.id, id["id"])
     if owner:
         user = bot.get_user(int(owner["user_id"]))
         Emb.set_footer(text=f"Capturado por {user.display_name}", icon_url=user.display_avatar.url)
@@ -82,22 +82,3 @@ async def GenerateEmbed(ctx: commands.Context, bot, id):
         Emb.set_footer(text="não capturado")
 
     await ctx.send(embed=Emb, view=view)
-
-async def GenerateFav(ctx):
-    embed = discord.Embed(
-        title=f"{ctx.author.name} Favorites ❤️",
-        color=discord.Color.red()
-    )
-
-    favorites = get_favorites(ctx.author.id)
-    
-    # sem favoritos
-    if len(favorites) == 0:
-        embed.description = "Você não possui personagens favoritados."
-    else:
-        texto = ""
-        for character in favorites:
-            texto += f"• {character}\n"
-        embed.description = texto
-
-    await ctx.send(embed=embed)
