@@ -20,26 +20,11 @@ def user_exists(user_id):
     )
     return len(response.data) > 0
 
-def get_favorites(user_id):
-
-    response = (
-        supabase
-        .table("users")
-        .select("favorites")
-        .eq("user_id", str(user_id))
-        .execute()
-    )
-
-    # usuário não existe
-    if len(response.data) == 0:
-        return []
-
-    return response.data[0]["favorites"]
-
 def ClaimCharacter(
     user_id,
     game,
-    character_id
+    character_id,
+    guild_id
 ):
 
     # ==========================================
@@ -54,6 +39,9 @@ def ClaimCharacter(
     ).eq(
         "character_id",
         character_id
+    ).eq(
+        "guild_id",
+        guild_id
     ).execute()
 
     # ==========================================
@@ -83,12 +71,14 @@ def ClaimCharacter(
 
         "game": game,
 
-        "character_id": character_id
+        "character_id": character_id,
+
+        "guild_id": guild_id
 
     }).execute()
 
-    char = supabase.table("player_characters").select("*").eq("game", game).eq("character_id", character_id).execute()
-    insertCache(char.data[0])
+    char = supabase.table("player_characters").select("*").eq("game", game).eq("character_id", character_id).eq("guild_id", guild_id).execute()
+    insertCache(guild_id, char.data[0])
 
     # ==========================================
     # sucesso

@@ -28,16 +28,23 @@ async def LoadClaimedCache():
     global ClaimedCache
 
     data = supabase.table("player_characters").select("*").execute()
-    ClaimedCache = {
-        char["character_id"]: char
-        for char in data.data
-    }
+    ClaimedCache = {}
 
-def verifyOwner(char_id):
-    return ClaimedCache.get(char_id)
+    for char in data.data:
+        guild_id = char["guild_id"]
+        character_id = char["character_id"]
 
-def insertCache(char_data):
-    ClaimedCache[char_data["character_id"]] = char_data
+        if guild_id not in ClaimedCache:
+            ClaimedCache[guild_id] = {}
+        
+        ClaimedCache[guild_id][character_id] = char
+
+def verifyOwner(guild_id, char_id):
+    return ClaimedCache.get(guild_id, {}).get(char_id)
+
+def insertCache(guild_id, char_data):
+    ClaimedCache.setdefault(guild_id, {})
+    ClaimedCache[guild_id][char_data["character_id"]] = char_data
 
 def GenshinDatabase():
     return GENSHIN_CACHE
