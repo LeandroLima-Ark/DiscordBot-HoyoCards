@@ -4,8 +4,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from utils.Embeds import (GenerateEmbed)
-from utils.HoyoAPI import (getCharacter, LoadDatabaseCache, LoadClaimedCache)
+from utils.Embeds import (GenerateEmbed, GenerateView, GenerateList)
+from utils.HoyoAPI import (getCharacter, convert ,searchCharacter, LoadDatabaseCache, LoadClaimedCache)
 
 perm = discord.Intents.all()
 perm.emojis = True
@@ -27,10 +27,22 @@ async def refresh_cache():
 # Commands
 # ###################################################################
 
-@bot.command()
-async def w(ctx: commands.context):
-    data = getCharacter()
+@bot.command(name="roll", aliases=["r", "R"])
+async def roll(ctx: commands.context):
+    data = convert(getCharacter())
     await GenerateEmbed(ctx, bot, data)
+
+@bot.command(name="view", aliases=["v", "V"])
+async def view(ctx: commands.context, *,texto):
+    search = searchCharacter(texto)
+    if not search:
+        return
+    data = convert(search)
+    await GenerateView(ctx, bot, data)
+
+@bot.command()
+async def viewall(ctx: commands.context):
+    await GenerateList(ctx)
 
 TOKEN = os.getenv("TOKEN")
 bot.run(TOKEN)

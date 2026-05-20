@@ -61,38 +61,52 @@ def GetRandomIndex(data):
 
 def getCharacter():
     game = GetRandomIndex(Games)
-
     if game == 0:
         Game = "Genshin Impact"
         data = GenshinDatabase()
         Character = GetRandomIndex(data)
-
-        ImageUrl = Character["card_url"]
-
-        return {
-            "id": Character["id"],
-            "name": Character["name"],
-            "image": ImageUrl,
-            "icon": Character["icon_url"],
-            "rarity": Character["rarity"],
-            "element": Character["element"],
-            "weapon": Character["weapon"],
-            "game": Game
-        }
     if game == 1:
         Game = "Honkai: Star Rail"
         data = HonkaiDatabase()
         Character = GetRandomIndex(data)
+    return Character, Game
+    
+def convert(data):
+    Image = data[0]["portrait_url"] if data[1] == "Honkai: Star Rail" else data[0]["card_url"]
+    Trace = data[0]["path"] if data[1] == "Honkai: Star Rail" else data[0]["weapon"]
+    return {
+        "id":  data[0]["id"],
+        "name": data[0]["name"],
+        "image": Image,
+        "icon": data[0]["icon_url"],
+        "rarity": data[0]["rarity"],
+        "element": data[0]["element"],
+        "trace": Trace,
+        "game": data[1]
+    }
+    
+def searchCharacter(name):
+    response = (
+        supabase.table("hsr_characters")
+        .select("*")
+        .ilike("name", f"%{name}%")
+        .limit(1)
+        .execute()
+    )
+    game = "Honkai: Star Rail"
 
-        ImageUrl = Character["portrait_url"]
-        return {
-            "id":  Character["id"],
-            "name": Character["name"],
-            "image": ImageUrl,
-            "icon": Character["icon_url"],
-            "rarity": Character["rarity"],
-            "element": Character["element"],
-            "path": Character["path"],
-            "game": Game
-        }
+    if not response.data:
+        response = (
+            supabase.table("genshin_characters")
+            .select("*")
+            .ilike("name", f"%{name}%")
+            .limit(1)
+            .execute()
+        )
+        game = "Genshin Impact"
+        
+    if not response.data:
+        return None
+    
+    return response.data[0], game
 

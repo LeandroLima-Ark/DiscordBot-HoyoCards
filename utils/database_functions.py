@@ -87,3 +87,8 @@ def ClaimCharacter(
     return {
         "success": True
     }
+
+def SearchAllCharacters():
+    response = supabase.table("hsr_characters").select("*").order("name", desc=False).execute()
+
+    return response.data
