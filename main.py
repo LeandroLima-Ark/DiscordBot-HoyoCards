@@ -40,9 +40,9 @@ async def view(ctx: commands.context, *,texto):
     data = convert(search)
     await GenerateView(ctx, bot, data)
 
-@bot.command()
-async def viewall(ctx: commands.context):
-    await GenerateList(ctx)
+@bot.command(name="viewall", aliases=["vall", "va"])
+async def viewall(ctx: commands.context, jogo: str = "all"):
+    await GenerateList(ctx, jogo)
 
 TOKEN = os.getenv("TOKEN")
 bot.run(TOKEN)

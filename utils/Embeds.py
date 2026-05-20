@@ -74,13 +74,15 @@ async def GenerateView(ctx: commands.Context, bot, id):
         Emb.set_footer(text="não capturado")
     await ctx.send(embed=Emb)
 
-async def GenerateList(ctx: commands.Context):
-    lista = SearchAllCharacters()
+async def GenerateList(ctx: commands.Context, jogo):
+    lista = SearchAllCharacters(jogo)
     texto = []
 
     for i in lista:
         nome = i["name"]
         texto.append(nome)
+    
+    texto.sort()
 
     if not texto:
         return

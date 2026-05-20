@@ -88,7 +88,14 @@ def ClaimCharacter(
         "success": True
     }
 
-def SearchAllCharacters():
-    response = supabase.table("hsr_characters").select("*").order("name", desc=False).execute()
+def SearchAllCharacters(jogo: str = "all"):
+    data = []
 
-    return response.data
+    if jogo == "all" or jogo == "hsr":
+        hsr = supabase.table("hsr_characters").select("*").order("name", desc=False).execute()
+        data.extend(hsr.data)
+    if jogo == "all" or jogo == "genshin":
+        genshin = supabase.table("genshin_characters").select("*").order("name", desc=False).execute()
+        data.extend(genshin.data)
+
+    return data
