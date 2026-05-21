@@ -109,4 +109,3 @@ def searchCharacter(name):
         return None
     
     return response.data[0], game
-

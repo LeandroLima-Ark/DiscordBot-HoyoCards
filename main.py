@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from utils.Embeds import (GenerateEmbed, GenerateView, GenerateList)
+from utils.Embeds import (GenerateEmbed, GenerateView, GenerateList, GenerateCatchs)
 from utils.HoyoAPI import (getCharacter, convert ,searchCharacter, LoadDatabaseCache, LoadClaimedCache)
 
 perm = discord.Intents.all()
@@ -43,6 +43,10 @@ async def view(ctx: commands.context, *,texto):
 @bot.command(name="viewall", aliases=["vall", "va"])
 async def viewall(ctx: commands.context, jogo: str = "all"):
     await GenerateList(ctx, jogo)
+
+@bot.command()
+async def favorites(ctx):
+   await GenerateCatchs(ctx)
 
 TOKEN = os.getenv("TOKEN")
 bot.run(TOKEN)

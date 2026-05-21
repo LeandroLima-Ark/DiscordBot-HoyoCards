@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.database_functions import (SearchAllCharacters)
+from utils.database_functions import (SearchAllCharacters, SearchClaimedCharacter)
 from utils.Views import (HeartButton, PageView)
 from utils.HoyoAPI import (verifyOwner)
 from utils.Emojis import (Elements, Paths, Jade)
@@ -99,5 +99,27 @@ async def GenerateList(ctx: commands.Context, jogo):
     Emb.description = page[0]
 
     view = PageView(page)
+
+    await ctx.send(embed=Emb, view=view)
+
+async def GenerateCatchs(ctx: commands.Context):
+    data = SearchClaimedCharacter(ctx.author.id, ctx.guild.id)
+
+    itensPage = 25
+    texto = []
+    for nome in range(0, len(data), itensPage):
+        pierce = data[nome:nome + itensPage]
+        itens = "\n".join(pierce)
+        texto.append(itens)
+
+
+    Emb = discord.Embed()
+    Emb.set_author(
+        name=f"Favoritos de {ctx.author.display_name}",
+        icon_url=ctx.author.display_avatar.url
+    )
+    Emb.description = texto[0]
+
+    view = PageView(texto)
 
     await ctx.send(embed=Emb, view=view)

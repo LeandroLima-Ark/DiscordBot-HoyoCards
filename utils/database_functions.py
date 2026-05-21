@@ -1,5 +1,5 @@
 from utils.database import supabase
-from utils.HoyoAPI import insertCache
+from utils.HoyoAPI import (insertCache)
 
 def create_user(user):
     data = {
@@ -99,3 +99,24 @@ def SearchAllCharacters(jogo: str = "all"):
         data.extend(genshin.data)
 
     return data
+
+def SearchClaimedCharacter(user_id, guild_id):
+    from utils.HoyoAPI import ClaimedCache
+    data = supabase.table("player_characters").select("*").eq("user_id", user_id).eq("guild_id", guild_id).execute()
+    
+    person_player = []
+    catchs = ClaimedCache.get(guild_id, {})
+
+    for person in data.data:
+        char_id = str(person["character_id"])
+        if char_id in catchs:
+            data_char = catchs[char_id]
+            if str(data_char["user_id"]) == str(user_id):
+                if person["game"] == "Honkai: Star Rail":
+                    response = supabase.table("hsr_characters").select("*").eq("id", person["character_id"]).execute()
+                    person_player.append(response.data[0]["name"])
+                if person["game"] == "Genshin Impact":
+                    response = supabase.table("genshin_characters").select("*").eq("id", person["character_id"]).execute()
+                    person_player.append(response.data[0]["name"])
+    
+    return person_player
